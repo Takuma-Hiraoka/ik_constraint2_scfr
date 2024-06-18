@@ -1,7 +1,7 @@
 #ifndef IK_CONSTRAINT2_SCFRCONSTRAINT_H
 #define IK_CONSTRAINT2_SCFRCONSTRAINT_H
 
-#include <ik_constraint2/COMConstraint.h>
+#include <ik_constraint2/ik_constraint2.h>
 #include <scfr_solver/scfr_solver.h>
 
 namespace ik_constraint2_scfr{

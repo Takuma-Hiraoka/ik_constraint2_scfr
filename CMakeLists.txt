@@ -6,7 +6,6 @@ set(CMAKE_BUILD_TYPE Release)
 
 find_package(catkin REQUIRED COMPONENTS
   ik_constraint2
-  ik_constraint2_bullet
   scfr_solver)
 
 find_package(choreonoid REQUIRED)
@@ -14,7 +13,7 @@ find_package(choreonoid REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ik_constraint2_scfr
-  CATKIN_DEPENDS ik_constraint2 scfr_solver ik_constraint2_bullet
+  CATKIN_DEPENDS ik_constraint2 scfr_solver
   #  DEPENDS system_lib
   )
 
@@ -30,7 +29,7 @@ include_directories(
 
 add_library(${PROJECT_NAME}
   src/ScfrConstraint.cpp
-  src/BulletScfrConstraint.cpp
+  src/KeepCollisionScfrConstraint.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

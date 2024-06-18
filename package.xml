@@ -12,7 +12,6 @@
 
   <depend>choreonoid</depend>
   <depend>ik_constraint2</depend>
-  <depend>ik_constraint2_bullet</depend>
   <depend>scfr_solver</depend>
 
 </package>

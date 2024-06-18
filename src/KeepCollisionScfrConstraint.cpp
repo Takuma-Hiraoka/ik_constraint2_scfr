@@ -1,7 +1,7 @@
-#include <ik_constraint2_scfr/BulletScfrConstraint.h>
+#include <ik_constraint2_scfr/KeepCollisionScfrConstraint.h>
 
-namespace ik_constraint2_bullet_scfr{
-  void BulletScfrConstraint::updateBounds() {
+namespace ik_constraint2_keep_collision_scfr{
+  void KeepCollisionScfrConstraint::updateBounds() {
     this->poses_.clear();
     this->As_.clear();
     this->bs_.clear();
@@ -37,16 +37,16 @@ namespace ik_constraint2_bullet_scfr{
     }
     ScfrConstraint::updateBounds();
   }
-  std::shared_ptr<ik_constraint2::IKConstraint> BulletScfrConstraint::clone(const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const {
-    std::shared_ptr<BulletScfrConstraint> ret = std::make_shared<BulletScfrConstraint>(*this);
+  std::shared_ptr<ik_constraint2::IKConstraint> KeepCollisionScfrConstraint::clone(const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const {
+    std::shared_ptr<KeepCollisionScfrConstraint> ret = std::make_shared<KeepCollisionScfrConstraint>(*this);
     this->copy(ret, modelMap);
     return ret;
   }
 
-  void BulletScfrConstraint::copy(std::shared_ptr<BulletScfrConstraint> ret, const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const {
+  void KeepCollisionScfrConstraint::copy(std::shared_ptr<KeepCollisionScfrConstraint> ret, const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const {
     ret->keepCollisionConstraints().clear();
     for (int i=0; i<this->keepCollisionConstraints_.size(); i++) {
-      ret->keepCollisionConstraints().push_back(std::static_pointer_cast<ik_constraint2_bullet::BulletKeepCollisionConstraint>(this->keepCollisionConstraints_[i]->clone(modelMap)));
+      ret->keepCollisionConstraints().push_back(std::static_pointer_cast<ik_constraint2::KeepCollisionConstraint>(this->keepCollisionConstraints_[i]->clone(modelMap)));
     }
   }
 }
