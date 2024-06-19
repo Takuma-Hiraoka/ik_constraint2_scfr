@@ -31,11 +31,24 @@ namespace ik_constraint2_scfr{
                             this->SCFRparam_
                             );
       Eigen::SparseMatrix<double,Eigen::ColMajor> C(M.rows(),3);
-      C.leftCols<2>() = M;
+      // TODO 重心の実行可能領域が存在するようにpose自体を拘束する
+      if (M.rows() > 0) C.leftCols<2>() = M;
       this->C_ = C;
       this->dl_ = l;
       this->du_ = u;
+
     }
     COMConstraint::updateBounds();
   }
+
+  std::shared_ptr<ik_constraint2::IKConstraint> ScfrConstraint::clone(const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const {
+    std::shared_ptr<ScfrConstraint> ret = std::make_shared<ScfrConstraint>(*this);
+    this->copy(ret, modelMap);
+    return ret;
+  }
+  void ScfrConstraint::copy(std::shared_ptr<ScfrConstraint> ret, const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const {
+    if(modelMap.find(this->A_robot_) != modelMap.end()) ret->A_robot() = modelMap.find(this->A_robot_)->second;
+    if(modelMap.find(this->B_robot_) != modelMap.end()) ret->B_robot() = modelMap.find(this->B_robot_)->second;
+  }
 }
+
