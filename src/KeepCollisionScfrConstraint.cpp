@@ -6,7 +6,7 @@ namespace ik_constraint2_keep_collision_scfr{
     if (this->children_.size() == 0) {
       this->children_.clear();
       this->children_.push_back(this->keepCollisionANDConstraints_);
-      //this->children_.push_back(this->scfrConstraint_); // この順番でpush_backすることでSCFR計算時すでに干渉計算が終わっているようにする
+      this->children_.push_back(this->scfrConstraint_); // この順番でpush_backすることでSCFR計算時すでに干渉計算が終わっているようにする
     }
 
     int breakableIdx = -1; // contactIdxsでのidx
@@ -29,7 +29,7 @@ namespace ik_constraint2_keep_collision_scfr{
           contactIdxs.push_back(i);
           mgns.push_back(this->keepCollisionConstraints_[i]->margin());
           cnoid::Isometry3 pose = cnoid::Isometry3::Identity();
-          pose.translation() = std::static_pointer_cast<ik_constraint2::KeepCollisionConstraint>(this->keepCollisionConstraints_[i])->currentp();
+          pose.translation() = this->keepCollisionConstraints_[i]->currentp();
           poses.push_back(pose);
           As.emplace_back(0,6);
           bs.emplace_back(0);
@@ -124,7 +124,39 @@ namespace ik_constraint2_keep_collision_scfr{
       }
     }
 
-    this->keepCollisionANDConstraints_->updateBounds(); // TODO重複している
+    Eigen::VectorXd keepCollisionEq;
+    Eigen::VectorXd keepCollisionMinIneq;
+    Eigen::VectorXd keepCollisionMaxIneq;
+    { // this->keepCollisionANDConstraints_->updateBounds() だが各chilerenのupdateBoundsは終わっているのでそれ以外を行う
+      std::vector<std::reference_wrapper<const Eigen::VectorXd> > eqs;eqs.reserve(this->keepCollisionANDConstraints_->children().size());
+      std::vector<std::reference_wrapper <const Eigen::VectorXd> > minIneqs;minIneqs.reserve(this->keepCollisionANDConstraints_->children().size());
+      std::vector<std::reference_wrapper<const Eigen::VectorXd> > maxIneqs;maxIneqs.reserve(this->keepCollisionANDConstraints_->children().size());
+      int num_eqs = 0;
+      int num_ineqs = 0;
+      for(int i=0;i<this->keepCollisionANDConstraints_->children().size();i++) {
+        eqs.emplace_back(this->keepCollisionANDConstraints_->children()[i]->getEq());
+        minIneqs.emplace_back(this->keepCollisionANDConstraints_->children()[i]->getMinIneq());
+        maxIneqs.emplace_back(this->keepCollisionANDConstraints_->children()[i]->getMaxIneq());
+
+        num_eqs += eqs[i].get().rows();
+        num_ineqs += minIneqs[i].get().rows();
+      }
+
+      keepCollisionEq.resize(num_eqs);
+      keepCollisionMinIneq.resize(num_ineqs);
+      keepCollisionMaxIneq.resize(num_ineqs);
+
+      int idx_eq = 0;
+      int idx_ineq = 0;
+      for(size_t i=0;i<this->keepCollisionANDConstraints_->children().size(); i++){
+        keepCollisionEq.segment(idx_eq,eqs[i].get().rows()) = eqs[i].get();
+        idx_eq += eqs[i].get().rows();
+        keepCollisionMinIneq.segment(idx_ineq,minIneqs[i].get().rows()) = minIneqs[i].get();
+        keepCollisionMaxIneq.segment(idx_ineq,minIneqs[i].get().rows()) = maxIneqs[i].get();
+        idx_ineq += minIneqs[i].get().rows();
+      }
+    }
+
     // SCFRを計算し、重心制約を求める
     this->scfrConstraint_->updateBounds();
 
@@ -136,9 +168,12 @@ namespace ik_constraint2_keep_collision_scfr{
     int num_eqs = 0;
     int num_ineqs = 0;
     for(int i=0;i<this->children_.size();i++) {
-      eqs.emplace_back(this->children_[i]->getEq());
-      minIneqs.emplace_back(this->children_[i]->getMinIneq());
-      maxIneqs.emplace_back(this->children_[i]->getMaxIneq());
+      if (i==0) eqs.emplace_back(keepCollisionEq);
+      else eqs.emplace_back(this->children_[i]->getEq());
+      if (i==0) minIneqs.emplace_back(keepCollisionMinIneq);
+      else minIneqs.emplace_back(this->children_[i]->getMinIneq());
+      if (i==0) maxIneqs.emplace_back(keepCollisionMaxIneq);
+      else maxIneqs.emplace_back(this->children_[i]->getMaxIneq());
 
       num_eqs += eqs[i].get().rows();
       num_ineqs += minIneqs[i].get().rows();
@@ -184,7 +219,7 @@ namespace ik_constraint2_keep_collision_scfr{
     ret->keepCollisionANDConstraints() = std::static_pointer_cast<ik_constraint2::ANDConstraint>(this->keepCollisionANDConstraints_->clone(modelMap));
     ret->scfrConstraint() = std::static_pointer_cast<ik_constraint2_scfr::ScfrConstraint>(this->scfrConstraint_->clone(modelMap));
     ret->children_.clear();
-    ret->children_.push_back(ret->keepCollisionANDConstraints());
-    ret->children_.push_back(ret->scfrConstraint()); // この順番でpush_backすることでSCFR計算時すでに干渉計算が終わっているようにする
+    // ret->children_.push_back(ret->keepCollisionANDConstraints());
+    // ret->children_.push_back(ret->scfrConstraint()); // この順番でpush_backすることでSCFR計算時すでに干渉計算が終わっているようにする
   }
 }
