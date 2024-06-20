@@ -23,8 +23,8 @@ namespace ik_constraint2_scfr{
     std::vector<cnoid::VectorX>& dls() { return dls_;}
     const std::vector<cnoid::VectorX>& dus() const { return dus_;}
     std::vector<cnoid::VectorX>& dus() { return dus_;}
-    const scfr_solver::SCFRParam& SCFRparam() const { return SCFRparam_;}
-    scfr_solver::SCFRParam& SCFRparam() { return SCFRparam_;}
+    const scfr_solver::SCFRParam& SCFRParam() const { return SCFRParam_;}
+    scfr_solver::SCFRParam& SCFRParam() { return SCFRParam_;}
 
     // A_robotのCOMをSCFRに留める
     virtual void updateBounds() override;
@@ -38,7 +38,7 @@ namespace ik_constraint2_scfr{
     std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> > Cs_;
     std::vector<cnoid::VectorX> dls_;
     std::vector<cnoid::VectorX> dus_;
-    scfr_solver::SCFRParam SCFRparam_;
+    scfr_solver::SCFRParam SCFRParam_;
 
     std::vector<cnoid::Isometry3> prevPoses_;
   };

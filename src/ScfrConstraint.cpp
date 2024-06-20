@@ -28,7 +28,7 @@ namespace ik_constraint2_scfr{
                             l,
                             u,
                             vertices,
-                            this->SCFRparam_
+                            this->SCFRParam_
                             );
       Eigen::SparseMatrix<double,Eigen::ColMajor> C(M.rows(),3);
       // TODO 重心の実行可能領域が存在するようにpose自体を拘束する
@@ -37,6 +37,12 @@ namespace ik_constraint2_scfr{
       this->dl_ = l;
       this->du_ = u;
 
+      if (this->debugLevel_>=2) {
+        std::cerr << "ScfrConstraint" << std::endl;
+        for (int i=0; i<vertices.size(); i++) {
+          std::cerr << vertices[i][0] << " " << vertices[i][1] << std::endl;
+        }
+      }
     }
     COMConstraint::updateBounds();
   }

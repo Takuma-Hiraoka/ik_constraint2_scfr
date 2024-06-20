@@ -1,5 +1,5 @@
 #include <ik_constraint2_scfr/KeepCollisionScfrConstraint.h>
-
+#include <cnoid/TimeMeasure>
 namespace ik_constraint2_keep_collision_scfr{
   void KeepCollisionScfrConstraint::updateBounds() {
 
@@ -20,6 +20,8 @@ namespace ik_constraint2_keep_collision_scfr{
 
     // 全てのkeepCollisionConstraintに関してboundsを計算して、接触しているもののうちSCFRがbreakしてもSCFRが存在し、かつその中で最もmarginが小さいもののIdを見つける.
     {
+      cnoid::TimeMeasure timer;
+      timer.begin();
       std::vector<double> mgns;
       for (int i=0; i<this->keepCollisionConstraints_.size(); i++) {
         this->keepCollisionConstraints_[i]->updateBounds();
@@ -84,7 +86,8 @@ namespace ik_constraint2_keep_collision_scfr{
                                               M,
                                               l,
                                               u,
-                                              vertices
+                                              vertices,
+                                              this->breakableSCFRParam_
                                               );
           if (solved) { // 接触をbreakしても良い
             if(mgns[i] < minMargin) {
@@ -93,6 +96,9 @@ namespace ik_constraint2_keep_collision_scfr{
             }
           }
         }
+      }
+      if (this->debugLevel_>=1) {
+        std::cerr << "KeepCollisionScfrConstraint" << " : " << contactIdxs.size() <<" contacts " << timer.measure() << " [s] for calcSCFRs" << std::endl;
       }
     }
 
