@@ -31,7 +31,6 @@ namespace ik_constraint2_scfr{
                             this->SCFRParam_
                             );
       Eigen::SparseMatrix<double,Eigen::ColMajor> C(M.rows(),3);
-      // TODO 重心の実行可能領域が存在するようにpose自体を拘束する
       if (M.rows() > 0) C.leftCols<2>() = M;
       this->C_ = C;
       this->dl_ = l;
@@ -45,6 +44,19 @@ namespace ik_constraint2_scfr{
       }
     }
     COMConstraint::updateBounds();
+
+  }
+
+  bool ScfrConstraint::isSatisfied() const {
+    if (this->minIneq_.size() == 0) return false; // COMConstraintのisSatisfiedでは接触がなくなったときにもtrueになってしまう. そもそも接触がなくならないようにすること
+    double cost2=0.0;
+    for(int i=0;i<this->minIneq_.size();i++){
+      if(this->minIneq_[i] > 0.0) cost2 += std::pow(this->minIneq_[i], 2);
+    }
+    for(int i=0;i<this->maxIneq_.size();i++){
+      if(this->maxIneq_[i] < 0.0) cost2 += std::pow(this->maxIneq_[i], 2);
+    }
+    return cost2 <= std::pow(this->CPrecision_,2);
   }
 
   std::shared_ptr<ik_constraint2::IKConstraint> ScfrConstraint::clone(const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const {

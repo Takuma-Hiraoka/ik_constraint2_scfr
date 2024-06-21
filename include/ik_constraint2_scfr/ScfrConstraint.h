@@ -28,6 +28,7 @@ namespace ik_constraint2_scfr{
 
     // A_robotのCOMをSCFRに留める
     virtual void updateBounds() override;
+    virtual bool isSatisfied() const override;
     // 複製する. このとき、modelMapのkeyにあるロボットモデルに属するリンクは、valueに置き換える
     virtual std::shared_ptr<ik_constraint2::IKConstraint> clone(const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const override;
     void copy(std::shared_ptr<ScfrConstraint> ret, const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const;
