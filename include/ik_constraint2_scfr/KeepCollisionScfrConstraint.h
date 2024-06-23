@@ -18,6 +18,8 @@ namespace ik_constraint2_keep_collision_scfr{
     std::shared_ptr<ik_constraint2_scfr::ScfrConstraint>& scfrConstraint() { return scfrConstraint_;}
     const scfr_solver::SCFRParam& breakableSCFRParam() const { return breakableSCFRParam_;}
     scfr_solver::SCFRParam& breakableSCFRParam() { return breakableSCFRParam_;}
+    const int& minimumContactCount() const { return minimumContactCount_;}
+    int& minimumContactCount() { return minimumContactCount_;}
 
     virtual void updateBounds() override;
     // 複製する. このとき、modelMapのkeyにあるロボットモデルに属するリンクは、valueに置き換える
@@ -29,6 +31,7 @@ namespace ik_constraint2_keep_collision_scfr{
     std::vector<std::shared_ptr<ik_constraint2::KeepCollisionConstraint> > keepCollisionConstraints_;
     std::shared_ptr<ik_constraint2_scfr::ScfrConstraint> scfrConstraint_;
     scfr_solver::SCFRParam breakableSCFRParam_;
+    int minimumContactCount_ = 2; // この数を上回る接触が発生している場合、離してもSCFRが存在するものを一つ選んでANDConstraintにはいれない. 逆に少なくともこの数の接触点は残す.
 
   };
 }

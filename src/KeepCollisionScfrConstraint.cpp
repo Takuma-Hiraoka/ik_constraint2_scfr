@@ -55,7 +55,7 @@ namespace ik_constraint2_keep_collision_scfr{
       }
 
       double minMargin = std::numeric_limits<double>::max();
-      if (contactIdxs.size() > 2) { // 少なくとも2点で触れるようにする
+      if (contactIdxs.size() > this->minimumContactCount_) { // 少なくともminimumContactCount_点で触れるようにする
         for (int i=0; i<contactIdxs.size(); i++) {
           std::vector<cnoid::Isometry3> poses_;
           std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> > As_;
