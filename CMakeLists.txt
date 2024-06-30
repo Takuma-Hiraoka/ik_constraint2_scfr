@@ -6,7 +6,8 @@ set(CMAKE_BUILD_TYPE Release)
 
 find_package(catkin REQUIRED COMPONENTS
   ik_constraint2
-  scfr_solver)
+  scfr_solver
+  clpeigen)
 
 find_package(choreonoid REQUIRED)
 

@@ -25,6 +25,14 @@ namespace ik_constraint2_keep_collision_scfr{
     // 複製する. このとき、modelMapのkeyにあるロボットモデルに属するリンクは、valueに置き換える
     virtual std::shared_ptr<ik_constraint2::IKConstraint> clone(const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const override;
     void copy(std::shared_ptr<KeepCollisionScfrConstraint> ret, const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const;
+    bool checkSCFRExistance(std::vector<Eigen::Isometry3d>& poses,
+                const std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> >& As, // pose local frame. 列は6(F N)
+                const std::vector<Eigen::VectorXd>& bs,
+                const std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> >& Cs, // pose local frame. 列は6(F N)
+                const std::vector<Eigen::VectorXd>& dls,
+                const std::vector<Eigen::VectorXd>& dus,
+                const double& m, // robotの質量
+                const scfr_solver::SCFRParam& param);
 
   protected:
     std::shared_ptr<ik_constraint2::ANDConstraint> keepCollisionANDConstraints_ = std::make_shared<ik_constraint2::ANDConstraint>();
