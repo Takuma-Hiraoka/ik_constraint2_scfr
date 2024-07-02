@@ -12,8 +12,8 @@ namespace ik_constraint2_keep_collision_scfr{
     // 離してもSCFRが解けるものの選び方に注意.
     const std::shared_ptr<ik_constraint2::ANDConstraint>& keepCollisionANDConstraints() const { return keepCollisionANDConstraints_;}
     std::shared_ptr<ik_constraint2::ANDConstraint>& keepCollisionANDConstraints() { return keepCollisionANDConstraints_;}
-    const std::vector<std::shared_ptr<ik_constraint2::KeepCollisionConstraint> >& keepCollisionConstraints() const { return keepCollisionConstraints_;}
-    std::vector<std::shared_ptr<ik_constraint2::KeepCollisionConstraint> >& keepCollisionConstraints() { return keepCollisionConstraints_;}
+    const std::vector<std::shared_ptr<ik_constraint2::CollisionConstraint> >& keepCollisionConstraints() const { return keepCollisionConstraints_;}
+    std::vector<std::shared_ptr<ik_constraint2::CollisionConstraint> >& keepCollisionConstraints() { return keepCollisionConstraints_;}
     const std::shared_ptr<ik_constraint2_scfr::ScfrConstraint>& scfrConstraint() const { return scfrConstraint_;}
     std::shared_ptr<ik_constraint2_scfr::ScfrConstraint>& scfrConstraint() { return scfrConstraint_;}
     const scfr_solver::SCFRParam& breakableSCFRParam() const { return breakableSCFRParam_;}
@@ -36,7 +36,7 @@ namespace ik_constraint2_keep_collision_scfr{
 
   protected:
     std::shared_ptr<ik_constraint2::ANDConstraint> keepCollisionANDConstraints_ = std::make_shared<ik_constraint2::ANDConstraint>();
-    std::vector<std::shared_ptr<ik_constraint2::KeepCollisionConstraint> > keepCollisionConstraints_;
+    std::vector<std::shared_ptr<ik_constraint2::CollisionConstraint> > keepCollisionConstraints_;
     std::shared_ptr<ik_constraint2_scfr::ScfrConstraint> scfrConstraint_;
     scfr_solver::SCFRParam breakableSCFRParam_;
     int minimumContactCount_ = 2; // この数を上回る接触が発生している場合、離してもSCFRが存在するものを一つ選んでANDConstraintにはいれない. 逆に少なくともこの数の接触点は残す.

@@ -30,7 +30,11 @@ namespace ik_constraint2_keep_collision_scfr{
           contactIdxs.push_back(i);
           mgns.push_back(this->keepCollisionConstraints_[i]->margin());
           cnoid::Isometry3 pose = cnoid::Isometry3::Identity();
-          pose.translation() = this->keepCollisionConstraints_[i]->currentp();
+          pose.translation() = this->keepCollisionConstraints_[i]->B_currentLocalp();
+          cnoid::Vector3d z_axis = this->keepCollisionConstraints_[i]->currentDirection();
+          cnoid::Vector3d x_axis = (z_axis==cnoid::Vector3d::UnitY()) ? cnoid::Vector3d::UnitZ() : cnoid::Vector3d::UnitY().cross(z_axis);
+          cnoid::Vector3d y_axis = z_axis.cross(x_axis);
+          pose.rotation().col(0) = x_axis.normalized(); pose.rotation().col(1) = y_axis.normalized(); pose.rotation().col(2) = z_axis.normalized();
           poses.push_back(pose);
           As.emplace_back(0,6);
           bs.emplace_back(0);
@@ -207,13 +211,11 @@ namespace ik_constraint2_keep_collision_scfr{
     //    ANDConstraint::copy(ret,modelMap);
     ret->keepCollisionConstraints().clear();
     for (int i=0; i<this->keepCollisionConstraints_.size(); i++) {
-      ret->keepCollisionConstraints().push_back(std::static_pointer_cast<ik_constraint2::KeepCollisionConstraint>(this->keepCollisionConstraints_[i]->clone(modelMap)));
+      ret->keepCollisionConstraints().push_back(std::static_pointer_cast<ik_constraint2::CollisionConstraint>(this->keepCollisionConstraints_[i]->clone(modelMap)));
     }
     ret->keepCollisionANDConstraints() = std::static_pointer_cast<ik_constraint2::ANDConstraint>(this->keepCollisionANDConstraints_->clone(modelMap));
     ret->scfrConstraint() = std::static_pointer_cast<ik_constraint2_scfr::ScfrConstraint>(this->scfrConstraint_->clone(modelMap));
     ret->children_.clear();
-    // ret->children_.push_back(ret->keepCollisionANDConstraints());
-    // ret->children_.push_back(ret->scfrConstraint()); // この順番でpush_backすることでSCFR計算時すでに干渉計算が終わっているようにする
   }
 
     inline bool appendRow(const std::vector<Eigen::VectorXd>& vs, Eigen::VectorXd& vout){
