@@ -34,7 +34,7 @@ namespace ik_constraint2_keep_collision_scfr{
           cnoid::Vector3d z_axis = this->keepCollisionConstraints_[i]->currentDirection();
           cnoid::Vector3d x_axis = (z_axis==cnoid::Vector3d::UnitY()) ? cnoid::Vector3d::UnitZ() : cnoid::Vector3d::UnitY().cross(z_axis);
           cnoid::Vector3d y_axis = z_axis.cross(x_axis);
-          pose.rotation().col(0) = x_axis.normalized(); pose.rotation().col(1) = y_axis.normalized(); pose.rotation().col(2) = z_axis.normalized();
+          pose.linear().col(0) = x_axis.normalized(); pose.linear().col(1) = y_axis.normalized(); pose.linear().col(2) = z_axis.normalized();
           poses.push_back(pose);
           As.emplace_back(0,6);
           bs.emplace_back(0);
