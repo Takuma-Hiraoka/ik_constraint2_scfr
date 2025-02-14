@@ -23,7 +23,7 @@ namespace ik_constraint2_slide_scfr{
     std::vector<std::shared_ptr<ik_constraint2::PositionConstraint> > positionConstraints_;
     std::shared_ptr<ik_constraint2_scfr::ScfrConstraint> scfrConstraint_ = std::make_shared<ik_constraint2_scfr::ScfrConstraint>();
     std::vector<cnoid::Isometry3> initialPoses_;
-    cnoid::Vector6 slideThreshold_ = (cnoid::Vector6()<<0.05,0.05,0.05,0.05,0.05,0.05).finished(); // この値を超えたら滑り判定. x,y,yawしか使わない.
+    cnoid::Vector6 slideThreshold_ = (cnoid::Vector6()<<0.05,0.05,0.05,M_PI/12,M_PI/12,M_PI/12).finished(); // この値を超えたら滑り判定. x,y,yawしか使わない.
 
   };
 }
