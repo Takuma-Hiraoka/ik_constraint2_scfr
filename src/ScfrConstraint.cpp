@@ -10,14 +10,27 @@ namespace ik_constraint2_scfr{
     return true;
   }
   void ScfrConstraint::updateBounds() {
-    if (!isPosesEqual(this->poses_, this->prevPoses_)) { // 接触点が変わったら再計算
-      this->prevPoses_ = this->poses_;
+    std::vector<cnoid::Isometry3> poses;
+    if (this->links_.size() == 0) poses = this->poses_;
+    else {
+    if (this->poses_.size() != this->links_.size()) {
+      std::cerr << "[ScfrConstraint] error!! size of poses and links mismatch!" << std::endl;
+      this->links_ = std::vector<cnoid::LinkPtr>(this->poses_.size(), nullptr);
+    }
+    for (int i=0; i<this->poses_.size();i++) {
+      poses.push_back((this->links_[i]) ? this->links_[i]->T() * this->poses_[i] : this->poses_[i]);
+    }
+
+    }
+
+    if (!isPosesEqual(poses, this->prevPoses_)) { // 接触点が変わったら再計算
+      this->prevPoses_ = poses;
 
       Eigen::SparseMatrix<double,Eigen::RowMajor> M(0,2);
       Eigen::VectorXd l;
       Eigen::VectorXd u;
       std::vector<Eigen::Vector2d> vertices;
-      scfr_solver::calcSCFR(this->poses_,
+      scfr_solver::calcSCFR(poses,
                             this->As_,
                             this->bs_,
                             this->Cs_,

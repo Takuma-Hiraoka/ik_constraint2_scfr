@@ -11,6 +11,8 @@ namespace ik_constraint2_scfr{
       this->weight_ = cnoid::Vector3::Zero();
     }
 
+    const std::vector<cnoid::LinkPtr>& links() const {return links_;}
+    std::vector<cnoid::LinkPtr>& links() {return links_;}
     const std::vector<cnoid::Isometry3>& poses() const { return poses_;}
     std::vector<cnoid::Isometry3>& poses() { return poses_;}
     const std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> >& As() const { return As_;}
@@ -33,6 +35,7 @@ namespace ik_constraint2_scfr{
     virtual std::shared_ptr<ik_constraint2::IKConstraint> clone(const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const override;
     void copy(std::shared_ptr<ScfrConstraint> ret, const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const;
   protected:
+    std::vector<cnoid::LinkPtr> links_;
     std::vector<cnoid::Isometry3> poses_;
     std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> > As_;
     std::vector<cnoid::VectorX> bs_;
