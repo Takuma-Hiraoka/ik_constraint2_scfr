@@ -32,6 +32,7 @@ add_library(${PROJECT_NAME}
   src/ScfrConstraint.cpp
   src/KeepCollisionScfrConstraint.cpp
   src/SlideScfrConstraint.cpp
+  src/ORKeepCollisionConstraint.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
