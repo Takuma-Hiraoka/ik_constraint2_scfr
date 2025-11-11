@@ -51,6 +51,13 @@ namespace ik_constraint2_scfr{
 
       if (this->debugLevel_>=2) {
         std::cerr << "ScfrConstraint" << std::endl;
+        std::cerr << "poses" << std::endl;
+        for (int i=0; i<poses.size(); i++) {
+          std::cerr << poses[i].translation().transpose() << std::endl;
+          std::cerr << poses[i].linear() << std::endl;
+          std::cerr << std::endl;
+        }
+        std::cerr << "vertices" << std::endl;
         for (int i=0; i<vertices.size(); i++) {
           std::cerr << vertices[i][0] << " " << vertices[i][1] << std::endl;
         }
