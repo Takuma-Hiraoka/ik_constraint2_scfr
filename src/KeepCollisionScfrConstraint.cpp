@@ -77,15 +77,15 @@ namespace ik_constraint2_keep_collision_scfr{
             dls_.push_back(dls[j]);
             dus_.push_back(dus[j]);
           }
-          bool solved = KeepCollisionScfrConstraint::checkSCFRExistance(poses_,
-                                                                        As_,
-                                                                        bs_,
-                                                                        Cs_,
-                                                                        dls_,
-                                                                        dus_,
-                                                                        this->scfrConstraint_->A_robot()->mass(),
-                                                                        this->breakableSCFRParam_
-                                                                        );
+          bool solved = checkSCFRExistance(poses_,
+                                           As_,
+                                           bs_,
+                                           Cs_,
+                                           dls_,
+                                           dus_,
+                                           this->scfrConstraint_->A_robot()->mass(),
+                                           this->breakableSCFRParam_
+                                           );
           if (solved) { // 接触をbreakしても良い
             if(mgns[i] < minMargin) {
               minMargin = mgns[i];
@@ -282,14 +282,14 @@ namespace ik_constraint2_keep_collision_scfr{
     return true;
   }
 
-  bool KeepCollisionScfrConstraint::checkSCFRExistance(std::vector<Eigen::Isometry3d>& poses,
-                                                            const std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> >& As, // pose local frame. 列は6(F N)
-                                                            const std::vector<Eigen::VectorXd>& bs,
-                                                            const std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> >& Cs, // pose local frame. 列は6(F N)
-                                                            const std::vector<Eigen::VectorXd>& dls,
-                                                            const std::vector<Eigen::VectorXd>& dus,
-                                                            const double& m, // robotの質量
-                                                            const scfr_solver::SCFRParam& param) {
+  bool checkSCFRExistance(std::vector<Eigen::Isometry3d>& poses,
+                          const std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> >& As, // pose local frame. 列は6(F N)
+                          const std::vector<Eigen::VectorXd>& bs,
+                          const std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> >& Cs, // pose local frame. 列は6(F N)
+                          const std::vector<Eigen::VectorXd>& dls,
+                          const std::vector<Eigen::VectorXd>& dus,
+                          const double& m, // robotの質量
+                          const scfr_solver::SCFRParam& param) {
     if(poses.size() != As.size() ||
        poses.size() != bs.size() ||
        poses.size() != Cs.size() ||

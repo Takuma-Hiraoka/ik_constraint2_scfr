@@ -25,14 +25,6 @@ namespace ik_constraint2_keep_collision_scfr{
     // 複製する. このとき、modelMapのkeyにあるロボットモデルに属するリンクは、valueに置き換える
     virtual std::shared_ptr<ik_constraint2::IKConstraint> clone(const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const override;
     void copy(std::shared_ptr<KeepCollisionScfrConstraint> ret, const std::map<cnoid::BodyPtr, cnoid::BodyPtr>& modelMap) const;
-    bool checkSCFRExistance(std::vector<Eigen::Isometry3d>& poses,
-                const std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> >& As, // pose local frame. 列は6(F N)
-                const std::vector<Eigen::VectorXd>& bs,
-                const std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> >& Cs, // pose local frame. 列は6(F N)
-                const std::vector<Eigen::VectorXd>& dls,
-                const std::vector<Eigen::VectorXd>& dus,
-                const double& m, // robotの質量
-                const scfr_solver::SCFRParam& param);
 
   protected:
     std::shared_ptr<ik_constraint2::ANDConstraint> keepCollisionANDConstraints_ = std::make_shared<ik_constraint2::ANDConstraint>();
@@ -42,6 +34,14 @@ namespace ik_constraint2_keep_collision_scfr{
     int minimumContactCount_ = 2; // この数を上回る接触が発生している場合、離してもSCFRが存在するものを一つ選んでANDConstraintにはいれない. 逆に少なくともこの数の接触点は残す.
 
   };
+  bool checkSCFRExistance(std::vector<Eigen::Isometry3d>& poses,
+                          const std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> >& As, // pose local frame. 列は6(F N)
+                          const std::vector<Eigen::VectorXd>& bs,
+                          const std::vector<Eigen::SparseMatrix<double,Eigen::RowMajor> >& Cs, // pose local frame. 列は6(F N)
+                          const std::vector<Eigen::VectorXd>& dls,
+                          const std::vector<Eigen::VectorXd>& dus,
+                          const double& m, // robotの質量
+                          const scfr_solver::SCFRParam& param);
 }
 
 #endif
