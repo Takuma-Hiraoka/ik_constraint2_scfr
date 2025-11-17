@@ -300,7 +300,7 @@ namespace ik_constraint2_keep_collision_scfr{
     }
 
     if(poses.size() == 0) {
-      return true;
+      return false;
     }
 
     Eigen::SparseMatrix<double,Eigen::RowMajor> A;
@@ -467,7 +467,7 @@ namespace ik_constraint2_keep_collision_scfr{
     if (solver.solve()) {
       return true;
     } else {
-      std::cerr << "[" <<__FUNCTION__ << "] failed" << std::endl;
+      if(param.debugLevel) std::cerr << "[" <<__FUNCTION__ << "] failed" << std::endl;
       return false;
     }
 
