@@ -26,6 +26,8 @@ namespace ik_constraint2_or_keep_collision{
       this->eq_ = this->collisionConstraints_[this->activeIdx_]->getEq();
       this->minIneq_ = this->collisionConstraints_[this->activeIdx_]->getMinIneq();
       this->maxIneq_ = this->collisionConstraints_[this->activeIdx_]->getMaxIneq();
+      this->A_link_ = this->collisionConstraints_[this->activeIdx_]->A_link();
+      this->B_link_ = this->collisionConstraints_[this->activeIdx_]->B_link();
       this->currentDirection_ = this->collisionConstraints_[this->activeIdx_]->currentDirection();
       this->A_currentLocalp_ = this->collisionConstraints_[this->activeIdx_]->A_currentLocalp();
       this->B_currentLocalp_ = this->collisionConstraints_[this->activeIdx_]->B_currentLocalp();
